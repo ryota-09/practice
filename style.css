@@ -1,0 +1,16 @@
+h1 {
+  color: red;
+}
+
+p {
+  background-image: url(https://picsum.photos/200/300);
+}
+
+.first {
+  color: red;
+  border: solid;
+}
+
+#next {
+  color: aqua;
+}
