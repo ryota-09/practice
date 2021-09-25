@@ -1,29 +1,32 @@
 body {
-  background: #cccccc;
   width: 760px;
   margin: 0 auto;
 }
 
-h2 {
-  color: #ff0000;
-  text-align: center;
-  background-color: #ffff00;
-  border: 5px dashed #ff0000;
-}
-
-ul {
-  list-style-type: none;
-}
-
 .container {
-  margin-bottom: 20px;
+  text-align: center;
 }
 
-.bold {
-  font-weight: bold;
+table {
+  width: 600px;
+  height: 600px;
+}
+td {
+  width: 200px;
+  height: 200px;
+  cursor: pointer; 
 }
 
-#important {
-  font-size: 30px;
-  color: #aa0000;
+td:hover {
+  border: 1px solid #000000;
+}
+
+.vertical {
+  border-left: 1px solid #000000;
+  border-right: 1px solid #000000;
+}
+
+.horizontal {
+  border-top: 1px solid #000000;
+  border-bottom: 1px solid #000000;
 }
