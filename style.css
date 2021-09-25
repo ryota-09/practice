@@ -1,16 +1,47 @@
-h1 {
+h2 {
   color: red;
+  background-color: yellow;
+  border-color: red;
+  border-style: dashed;
+  text-align: center;
+  width: 800px;
+  margin: auto;
 }
 
-p {
-  background-image: url(https://picsum.photos/200/300);
+.intro {
+  font-size: large;
+  margin-top: 10px;
+  margin-left: 200px;
+  font-weight: bold;
+}
+
+span {
+  color: black;
+  font-weight: lighter;
+}
+
+.other {
+  margin-top: 10px;
+  margin-left: 200px;
+}
+
+p*[Webエンジニア] {
+  
 }
 
 .first {
   color: red;
   border: solid;
+  padding: 20px;
+  margin-bottom: 100px;
+}
+
+.back {
+  background-color: aqua;
 }
 
 #next {
-  color: aqua;
+  border:solid;
+  padding-bottom: 50px;
+  margin-top: 100px;
 }
