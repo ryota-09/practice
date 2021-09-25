@@ -1,47 +1,29 @@
-h2 {
-  color: red;
-  background-color: yellow;
-  border-color: red;
-  border-style: dashed;
-  text-align: center;
-  width: 800px;
-  margin: auto;
+body {
+  background: #cccccc;
+  width: 760px;
+  margin: 0 auto;
 }
 
-.intro {
-  font-size: large;
-  margin-top: 10px;
-  margin-left: 200px;
+h2 {
+  color: #ff0000;
+  text-align: center;
+  background-color: #ffff00;
+  border: 5px dashed #ff0000;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.container {
+  margin-bottom: 20px;
+}
+
+.bold {
   font-weight: bold;
 }
 
-span {
-  color: black;
-  font-weight: lighter;
-}
-
-.other {
-  margin-top: 10px;
-  margin-left: 200px;
-}
-
-p*[Webエンジニア] {
-  
-}
-
-.first {
-  color: red;
-  border: solid;
-  padding: 20px;
-  margin-bottom: 100px;
-}
-
-.back {
-  background-color: aqua;
-}
-
-#next {
-  border:solid;
-  padding-bottom: 50px;
-  margin-top: 100px;
+#important {
+  font-size: 30px;
+  color: #aa0000;
 }
