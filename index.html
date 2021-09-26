@@ -2,35 +2,72 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CSS中級編その１</title>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>My Blog</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <p>ボードゲーム</p>
-    <table align="center">
-      <thead>
-        <tr>
-          <td>1</td>
-          <td class="vertical">2</td>
-          <td>3</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="horizontal">4</td>
-          <td class="vertical horizontal">5</td>
-          <td class="horizontal">6</td>
-        </tr>
-        <tr>
-          <td>7</td>
-          <td class="vertical">8</td>
-          <td>9</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>  
+  <body>
+    <div class="post">
+      <h2>テキストのスタイル変更方法で学んだこと</h2>
+      <div class="date">2018年10月16日</div>
+      <h3>テキストの大きさを変更する</h3>
+      <p>
+        テキストの大きさを変更するには<span class="keyword">font-size</span>プロパティを使います。font-sizeの使い方は次のとおりです。
+      </p>
+      <p class="example">
+        p { font-size: 12px; }
+      </p>
+      <p>
+        上記の例では「px」を使いましたが、その他にも「%」「em」「rem」など様々な単位を利用することが出来ます。
+      </p>
+
+
+      <h3>テキストの太さを変更する</h3>
+      <p>
+        テキストの太さを変更するには<span class="keyword">font-weight</span>プロパティを使います。font-sizeの使い方は次のとおりです。
+      </p>
+      <p class="example">
+        p { font-weight: bold; }
+      </p>
+      <p>
+        上記の例では「bold」を使いましたが、その他にも「normal」「lighter」「bolder」「数値指定」など様々な単位を利用することが出来ます。
+      </p>
+
+
+      <h3>参考記事</h3>
+      <ul>
+        <li><a href="https://tsuyopon.xyz/learning-contents/web-dev/css/how-to-change-style-of-text-in-css/">CSSでテキストのスタイルを変更するパート1</a></li>
+        <li><a href="https://tsuyopon.xyz/learning-contents/web-dev/css/how-to-change-style-of-text-in-css-part-2/">CSSでテキストのスタイルを変更するパート2</a></li>
+      </ul>
+    </div>
+    <div class="post">
+      <h2>flexboxで学んだこと</h2>
+      <div class="date">2018年10月17日</div>
+      <h3>flexbox</h3>
+      <p>
+        <span class="keyword">flexbox</span>とは<span class="keyword">フレックスコンテナー</span>と<span class="keyword">フレックスアイテム</span>を使って、表示要素を縦並び、横並び、表示順番を逆にすることが可能になる機能のことである。
+      </p>
+      <p>
+        フレックスコンテナーとはフレックスアイテムを格納するコンテナーのことで、フレックスコンテナーにしたい要素のスタイル定義に以下のように<span class="keyword">「display: flex;」</span>をセットすることで利用できる。
+      </p>
+      <p class="example">
+        div { display: flex; }
+      </p>
+      <p>
+        フレックスアイテムとはフレックスコンテナーに格納された実際に表示される要素となる。
+      </p>
+      <h3>flexboxを使った実例を確認する</h3>
+      <p>
+        flexboxを使ったサンプルは「<a href="https://tsuyopon.xyz/learning-contents/web-dev/css/css_excercise_for_intermediate_part_2/">【エクササイズ】CSSのflexboxを使ってイメージギャラリーを作る</a>」の「<a href="https://github.com/tsuyopon-xyz/css_excercise_for_intermediate_part_2">課題レポジトリ</a>」から確認できる
+      </p>
+      <h3>参考記事</h3>
+      <ul>
+        <li><a href="https://tsuyopon.xyz/learning-contents/web-dev/css/how-to-use-flexbox-in-css/">CSSのflexboxの使い方を覚える</a></li>
+        <li><a href="https://tsuyopon.xyz/learning-contents/web-dev/css/css_excercise_for_intermediate_part_2/">【エクササイズ】CSSのflexboxを使ってイメージギャラリーを作る</a></li>
+      </ul>
+    </div>
+  </body>
 </body>
 </html>
