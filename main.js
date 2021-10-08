@@ -1,64 +1,228 @@
-
 (() => {
   // 利用するAPI情報元
   //   - 利用するAPI : https://opentdb.com/api.php?amount=10&type=multiple
 
   const API_URL = 'https://opentdb.com/api.php?amount=10&type=multiple';
 
-  // API_URLを使って実装してもらいたいこと
-  //   1. Fetch API(fetchメソッド)を使ってAPI経由でデータを取得する
-  //     - https://developer.mozilla.org/ja/docs/Web/API/WindowOrWorkerGlobalScope/fetch
-  //   2. fetchメソッドで取得したResponseデータからJSON形式のデータをオブジェクトに変換して次のthenメソッドにデータを渡す
-  //     - https://developer.mozilla.org/ja/docs/Web/API/Response
-  //   3. 2から受け取ったデータの中に含まれている次のデータをid属性値が `quiz-list` のul要素にリスト表示する
-  //     - resultsプロパティ(配列)の中に含まれている10件のデータ(オブジェクト)をforEachで取得する
-  //       - 「◯件目のクイズデータ」をli要素として追加する
-  //       - buildQuizList関数の戻り値(ul要素のDOM)をli要素に追加する。(結果としてネスト(入れ子)構造のリストになる)
-
-  const p = fetch(API_URL);
-  
-  
-    p.then((res) => {
-      return res.json();
-    })
-    .then((data) => {
-      const listElement = document.getElementById('list');
-      
-      data.results.forEach((quiz, index) => {
-        const numberTitleItem = document.createElement('li');
-        numberTitleItem.textContent = `${index + 1}件目のクイズデータ`;
-        listElement.appendChild(numberTitleItem);
-
-        const quizDataList = buildQuizList(quiz);
-        numberTitleItem.appendChild(quizDataList);
-      })
-    })
+  // 「gameState」オブジェクトを作る
+  // - クイズアプリのデータ管理用オブジェクト
+  // - 保持する情報
+  //   - quizzes : fetchで取得したクイズデータの配列(results)を保持する
+  //   - currentIndex : 現在何問目のクイズに取り組んでいるのかをインデックス番号で保持する
+  //   - numberOfCorrects : 正答数を保持する
+  const gameState = {
+    quizzes : [],
+    currentIndex : 0,
+    numberOfCorrect :0
+  };
 
 
+  // HTMLのid値がセットされているDOMを取得する
+  const questionElement = document.getElementById('question');
+  const resultElement = document.getElementById('result');
+  const answersContainer = document.getElementById('answers');
+  const restartButton = document.getElementById('restart-button');
 
-  // `buildQuizList関数` を実装する
-  //   - 実装する内容
-  //     - 引数で受けとったクイズデータを使ってul要素にクイズ情報を追加する
-  //     - クイズ情報を表示する際は以下の仕様で実装する
-  //       - 「◯件目のクイズデータ」をli要素として追加する
-  //       - クイズデータは「◯件目のクイズデータ」の表示より一段深いネスト(入れ子)でリスト表示にする
-  //       - 表示するクイズデータの表示形式は次の通り
-  //         - プロパティ名 : プロパティの値
-  //       - プロパティ名はstrong要素で囲んで強調する
-  //  - 引数
-  //    - quiz : オブジェクト(クイズデータ)
-  //  - 戻り値
-  //    - ul要素のDOM
-    const buildQuizList = (quiz) => {
-      const quizContainer = document.createElement('ul');
+  // ページの読み込みが完了したらクイズ情報を取得する
+  window.addEventListener('load', (event) => {
+    fetchQuizData();
+  });
 
-      for (const prop in quiz) {
-        const item = document.createElement('li');
+  // 「Restart」ボタンをクリックしたら再度クイズデータを取得する
+  restartButton.addEventListener('click', () => {
+    fetchQuizData();
+  });
 
-        item.innerHTML = `<strong>${prop}</strong>:${quiz[prop]}`;
-        quizContainer.appendChild(item);
-      };
-      return quizContainer;
+
+
+  // `fetchQuizData関数`を実装する
+  // - 実現したいこと
+  //   - Webページ上の表示をリセットする
+  //     - id属性値が 'question' の要素に「Now loading...」という文字列をセットする
+  //     - id属性値が 'result' の要素に空文字列をセットする (Restartボタンでクイズ2回以上繰り返す時用)
+  //     - id属性値が 'restart-button' の要素を非表示にする (Restartボタンでクイズ2回以上繰り返す時用)
+  //   - クイズ取得~取得後の流れ
+  //     1. API_URLとFetch API(fetchメソッド)を使ってAPI経由でデータを取得する
+  //       - https://developer.mozilla.org/ja/docs/Web/API/WindowOrWorkerGlobalScope/fetch
+  //     2. fetchメソッドで取得したResponseデータからJSON形式のデータをオブジェクトに変換して次のthenメソッドにデータを渡す
+  //       - https://developer.mozilla.org/ja/docs/Web/API/Response
+  //     3. 2で取得したデータの中にresultsプロパティ(配列)があり、その中には10件のクイズデータがある。
+  //        その10件のデータを利用してクイズの出題・回答を出来るようにする。(詳しくは完成形の画像を参照)
+  // - 引数
+  //   - 無し
+  // - 戻り値
+  //   - 無し
+const fetchQuizData = () => {
+  questionElement.textContent = 'Now loading...';
+  resultElement.textContent = '';
+  restartButton.hidden = true;
+
+  fetch(API_URL)
+  .then( response => response.json() )
+  .then( (data) => {
+    gameState.quizzes = data.results;
+    gameState.currentIndex = 0;
+    gameState.numberOfCorrect = 0;
+
+    setNextQuiz();
+  })
+};
+
+
+
+
+
+
+
+
+  // setNextQuiz関数を実装する
+  // - 実現したいこと
+  //   - 表示要素をリセットする
+  //     - 問題文を空にする
+  //     - 解答一覧を全て消す
+  //   - 条件に応じて、次の問題の表示 or 結果を表示する
+  //     - 次の問題がまだ存在すれば次の問題をセットする
+  //     - 直前に解答したのが最後の問題であれば結果を表示する(finishQuiz関数を実行する)
+  // - 引数
+  //   - 無し
+  // - 戻り値
+  //   - 無し
+  const setNextQuiz = () => {
+    questionElement.textContent = '';
+    removeAllAnswers();
+
+    if (gameState.currentIndex < gameState.quizzes.length) {
+      console.log('次の問題')
+      const quiz = gameState.quizzes[gameState.currentIndex];
+      makeQuiz(quiz);
+    } else {
+      console.log('終わり')
+      finishQuiz();
     };
+  };
+
+
+  // finishQuiz関数を実装する
+  // - 実現したいこと
+  //   - 正答数を表示する(例: 4問正解したばあいは 「4/10 corrects」と表示する)
+  //   - 「Restart」ボタンを表示する
+  // - 引数
+  //   - 無し
+  // - 戻り値
+  //   - 無し
+  const finishQuiz = () => {
+    resultElement.textContent = `${gameState.numberOfCorrect}/${gameState.quizzes.length} corrects`;
+    restartButton.hidden = false;
+  };
+
+
+  // removeAllAnswers関数を実装する
+  // - 実現したいこと
+  //   - 解答を全て削除する
+  // - 引数
+  //   - 無し
+  // - 戻り値
+  //   - 無し
+  const removeAllAnswers = () => {
+    while(answersContainer.firstChild){
+      answersContainer.removeChild(answersContainer.firstChild);
+    }
+  };
+
+
+  // makeQuiz関数を実装する
+  // - 実現したいこと
+  //   - クイズデータを元にWebページ上に問題と解答リストを表示する
+  //   - 解答をクリックしたら、正解・不正解のチェックをする
+  //     - 正解の場合
+  //       - 「gameState」オブジェクトで管理している正答数プロパティをインクリメントする
+  //       - 「Correct answer!!」とアラート表示する
+  //     - 不正解の場合
+  //       - 「Wrong answer... (The correct answer is "実際の答えを埋め込む")」とアラート表示する
+  //   - 回答する度に「gameState」オブジェクトで管理している、問題数プロパティをインクリメントする
+  //   - setNextQuiz関数を実行して次の問題をセットする(最後の問題の場合は結果を表示する。)
+  // - 引数
+  //   - オブジェクト(クイズデータ1件)
+  // - 戻り値無し
+  //   - 無し
+  const makeQuiz = (quiz) => {
+    const answers = buldAnswers(quiz);
+
+    questionElement.textContent = quiz.question;
+
+    answers.forEach((answer, index) => {
+      const liElement = document.createElement('li');
+      liElement.textContent = answer;
+      answersContainer.appendChild(liElement);
+      
+      liElement.addEventListener('click', (event) => {
+        const correctAnswer = quiz.correct_answer;
+        if (correctAnswer === liElement.textContent){
+          console.log('正解');
+          gameState.numberOfCorrect++;
+          alert('Correct answer!!');
+        } else {
+          console.log('違い');
+          alert(`Wrong answer... (The correct answer is ${correctAnswer})`);
+        };
+
+        gameState.currentIndex++;
+
+        setNextQuiz();
+      });
+    });
+  };
+
+
+
+
+
+
+
+  // quizオブジェクトの中にあるcorrect_answer, incorrect_answersを結合して
+  // 正解・不正解の解答をシャッフルする。
+  const buldAnswers = (quiz) => {
+    const answers = [
+      quiz.correct_answer,
+      ...quiz.incorrect_answers
+    ];
+
+    return shuffle(answers);
+  };
+
+  // `shuffle関数` を実装する
+  // - 実現したいこと
+  //   - 引数で受け取った配列内の値をシャッフルする
+  //   - 引数で渡された配列を上書きしないように、シャッフルする配列はコピーしたものを使う
+  //   - シャッフルの機能を実現するのに参考になるサイト
+  //     - https://chooblarin.github.io/post/array-shuffle
+  //     - https://qiita.com/wwwww/items/8da7e89d64a86809fb0c
+  // - 引数
+  //   - array : 配列
+  // -  
+  //   - shffuledArray : シャッフル後の配列(引数の配列とは別の配列であることに注意する)
+  const shuffle  = (array) => {
+    const copiedArray = array.slice();
+
+    for (let i = copiedArray.length -1 ;i >= 0; i--){
+      const rand = Math.floor( Math.random()* (i + 1));
+      [copiedArray[i], copiedArray[rand]] = [copiedArray[rand], copiedArray[i]];
+    }
+
+    return copiedArray;
+  };
+
+
+
+  // unescapeHTML関数を実装する
+  // - 実現したいこと
+  //   - &やクオーテーションマークなどが特殊文字としてセットされているので、
+  //     人間が読みやすい形式に変換した文字列を取得する(エスケープ文字を元に戻す)
+  //     参考にしたサイト : http://blog.tojiru.net/article/211339637.html
+  // - 引数
+  //   - 文字列
+  // - 戻り値
+  //   - 文字列
+
 
 })();

@@ -2,20 +2,20 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>【エクササイズ】Fetch APIを使ってクイズアプリを作る</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1 id="title">To do アプリ</h1>
-  <span>To do タスクの入力:</span>
-  <input id="todo" type="text">
-  <button id="taskButton" type="submit">追加</button>
-  <div id="main">
-    <span><b>現在のTodoリスト</b></span>
-    <ul id="list">
-    </ul>
+  <h1>Quiz App</h1>
+  <div class="container">
+    <p id="question"></p>
+    <ul id="answers"></ul>
+    <p id="result"></p>
+    <button id="restart-button">Restart</button>
   </div>
+
   <script src="main.js"></script>
 </body>
 </html>
